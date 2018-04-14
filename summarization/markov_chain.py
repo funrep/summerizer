@@ -1,4 +1,5 @@
 from random import choice
+from sys import stdin
 
 
 class markov_chain(object):
@@ -28,11 +29,11 @@ class markov_chain(object):
                 else:
                     self.ft[pw][word] = 1
 
-                self.ft[pw]["total"] += 1
             else:
                 self.ft[pw] = {}
-                self.ft[pw]["total"] = 1
                 self.ft[pw][word] = 1
+
+            pw = word
 
     def _get_sentence(self, start):
         """
@@ -53,34 +54,40 @@ class markov_chain(object):
 
         next_start = None
         if pos in self.ft:
-            next_start = get_successor(pos)
+            next_start = get_successor(self.ft[pos])
 
         return next_start, sentence
 
     def generate(self, sentences=2):
         """Generate a Text."""
-        start = choice(self.ft.keys())
+        start = choice(list(self.ft.keys()))
         text = []
         while sentences:
             start, sentence = self._get_sentence(start)
             text.extend(sentence)
 
             if start is None:
-                start = choice(self.ft.keys())
+                start = choice(list(self.ft.keys()))
 
             sentences -= 1
 
+        return " ".join(text)
+
 
 def get_successor(stats):
-    """Get successor of chain."""
-
-    """This might be used to effectivice."""
-    total = stats["total"]
-
     """Naive Solution."""
     freq = []
     for k, v in stats.items():
         freq.extend([k] * v)
 
     return choice(freq)
+
+
+chain = markov_chain()
+
+
+train = stdin.read()
+chain.learn(train)
+
+print(chain.generate())
 
