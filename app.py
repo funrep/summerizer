@@ -17,7 +17,7 @@ def extract_header():
         return data['text'][0:min(len(data['text']), int(data['length']))]
 
 
-@app.route("/markov")
+@app.route("/markov", methods=["POST"])
 def summarize():
     data = request.data
     SUMMARIZER.learn(data)
