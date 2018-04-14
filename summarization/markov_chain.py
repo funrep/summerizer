@@ -44,8 +44,9 @@ class markov_chain(object):
         """
         sentence = [start]
         pos = start
+        
         while not self.__siw(pos):
-            if pos in self.ft:
+            if pos in self.ft and self.ft[pos] != {}:
                 pos = get_successor(self.ft[pos])
                 sentence.append(pos)
             else:
@@ -53,21 +54,25 @@ class markov_chain(object):
                 break
 
         next_start = None
-        if pos in self.ft:
+        if pos in self.ft and self.ft[pos] != {}:
             next_start = get_successor(self.ft[pos])
 
         return next_start, sentence
 
     def generate(self, sentences=2):
         """Generate a Text."""
-        start = choice(list(self.ft.keys()))
+        keys = list(self.ft.keys())
+        if len(keys) == 0:
+            return "I have not been taught anything :("
+
+        start = choice(keys)
         text = []
         while sentences:
             start, sentence = self._get_sentence(start)
             text.extend(sentence)
 
             if start is None:
-                start = choice(list(self.ft.keys()))
+                start = choice(keys)
 
             sentences -= 1
 
@@ -79,6 +84,6 @@ def get_successor(stats):
     freq = []
     for k, v in stats.items():
         freq.extend([k] * v)
-
+    
     return choice(freq)
 
