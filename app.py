@@ -19,7 +19,7 @@ def extract_header():
 
 @app.route("/markov", methods=["POST"])
 def summarize():
-    data = request.data
+    data = request.get_data().decode("utf-8")
     SUMMARIZER.learn(data)
 
     response = SUMMARIZER.generate()
