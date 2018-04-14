@@ -1,5 +1,6 @@
 from random import choice
 
+
 class markov_chain(object):
 
     def __init__(self, ft={}):
@@ -36,7 +37,7 @@ class markov_chain(object):
     def _get_sentence(self, start):
         """
         Generate one sentence.
-        
+
         A sentence is defined as a sequence
         that ends in a separator.
         """
@@ -50,7 +51,6 @@ class markov_chain(object):
                 sentence.append("\n")
                 break
 
-        
         next_start = None
         if pos in self.ft:
             next_start = get_successor(pos)
@@ -59,18 +59,16 @@ class markov_chain(object):
 
     def generate(self, sentences=2):
         """Generate a Text."""
-        
-        """position in chain."""
-
         start = choice(self.ft.keys())
         text = []
         while sentences:
-            next_start, sentence = self._get_sentence(start)
+            start, sentence = self._get_sentence(start)
             text.extend(sentence)
 
-            if next_start is 
+            if start is None:
+                start = choice(self.ft.keys())
 
-
+            sentences -= 1
 
 
 def get_successor(stats):
@@ -79,13 +77,10 @@ def get_successor(stats):
     """This might be used to effectivice."""
     total = stats["total"]
 
-
     """Naive Solution."""
     freq = []
     for k, v in stats.items():
         freq.extend([k] * v)
 
     return choice(freq)
-
-
 
