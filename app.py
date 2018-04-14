@@ -10,7 +10,9 @@ def hello_world():
 
 @app.route('/extract-header')
 def extract_header():
-	return request.data[0: min(100, len(request.data))]
+
+	data = json.loads(request.data)
+	return data['text'][0:min(len(data['text']), int(data['length']))]
 
 if __name__ == '__main__':
     app.run(debug=True)
