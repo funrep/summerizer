@@ -82,12 +82,3 @@ def get_successor(stats):
 
     return choice(freq)
 
-
-chain = markov_chain()
-
-
-train = stdin.read()
-chain.learn(train)
-
-print(chain.generate())
-
